@@ -33,15 +33,17 @@ final class GenresViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        prepareUI()
-        getGenres()
+        
+        self.prepareUI()
+        self.getGenres()
     }
 
     private func prepareUI() {
         prepareRootView()
         prepareTableView()
-        prepareActivityIndicator()
+        DispatchQueue.main.async {
+            self.prepareActivityIndicator()
+        }
     }
 
     private func prepareRootView() {
@@ -74,24 +76,33 @@ final class GenresViewController: UIViewController {
     }
 
     private func getGenres() {
-        activityIndicator.startAnimating()
-
-        genresProvider.getGenres { result in
+        DispatchQueue.main.async {
+            self.activityIndicator.startAnimating()
+        }
+        
+        self.genresProvider.getGenres { result in
             switch result {
             case let .success(genres):
                 self.genres = genres
-                self.tableView.reloadData()
-                self.activityIndicator.stopAnimating()
+                DispatchQueue.main.async {
+                    print("Preparing to reload data")
+                    self.tableView.reloadData()
+                    print("Preparing to stop animating")
+                    self.activityIndicator.stopAnimating()
+                }
             case let .failure(error):
                 print("Cannot get genres, reason: \(error)")
             }
         }
+        
     }
 }
 
 extension GenresViewController: UITableViewDelegate {
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Row \(indexPath.row) selected")
+        let moviesProvider = MoviesProvider(apiManager: ApiManager())
+        self.navigationController?.pushViewController(MoviesViewController(genre: genres[indexPath.row], moviesProvider: moviesProvider), animated: true)
+        
     }
 }
 
