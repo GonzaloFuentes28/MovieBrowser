@@ -64,7 +64,8 @@ final class MoviesViewController: UIViewController {
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.cellId)
+        tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.cellId)
+        tableView.rowHeight = 150
     }
 
     private func prepareActivityIndicator() {
@@ -106,10 +107,26 @@ extension MoviesViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellId, for: indexPath)
-        var configuration = cell.defaultContentConfiguration()
-        configuration.text = movies[indexPath.row].title
-        cell.contentConfiguration = configuration
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellId, for: indexPath) as! MovieCell
+        cell.titleLabel.text = movies[indexPath.row].title
+        
+        if movies[indexPath.row].poster_path != nil{
+            print("Getting image for movie " + movies[indexPath.row].title! + " with URL " + "https://image.tmdb.org/t/p/w500" + movies[indexPath.row].poster_path!)
+            
+            self.moviesProvider.getMoviePoster(poster_path: movies[indexPath.row].poster_path!, completion: { result in
+                switch result {
+                case let .success(image):
+                    DispatchQueue.main.async {
+                        cell.posterImageView.image = image
+                    }
+                case let .failure(error):
+                    print(" Cannot get poster image, reason: \(error)")
+                }
+                
+            })
+
+        }
+                
         return cell
     }
     

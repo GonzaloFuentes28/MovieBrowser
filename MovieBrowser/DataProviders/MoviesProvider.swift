@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 final class MoviesProvider {
     private let apiManager: ApiManager
@@ -19,6 +20,17 @@ final class MoviesProvider {
             switch response {
             case let .success(response):
                 completion(.success(response.results))
+            case let .failure(error) :
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    func getMoviePoster(poster_path: String, completion: @escaping (Result<UIImage, Error>) -> Void) {
+        apiManager.makeImageRequest(request: ApiRequest(baseURL: URL(string: "https://image.tmdb.org/t/p/w500/")!, endpoint: poster_path)) { (response: Result<UIImage, Error>) in
+            switch response {
+            case let .success(response):
+                completion(.success(response))
             case let .failure(error) :
                 completion(.failure(error))
             }

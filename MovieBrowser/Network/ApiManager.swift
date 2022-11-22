@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 final class ApiManager {
     private enum Constants {
@@ -29,6 +30,29 @@ final class ApiManager {
                     completion(.success(try self.decoder.decode(T.self, from: data)))
                 } catch {
                     completion(.failure(error))
+                }
+            } else {
+                completion(.failure(UnknownApiError()))
+            }
+        }.resume()
+    }
+    
+    func makeImageRequest(request: ApiRequest, completion: @escaping (Result<UIImage, Error>) -> Void) {
+        urlSession.dataTask(with: makeURLRequest(from: request)) { [weak self] data, _, error in
+            guard self != nil else {
+                completion(.failure(UnknownApiError()))
+                return
+            }
+
+            if let error = error {
+                completion(.failure(error))
+            } else if let data = data {
+                let image = UIImage(data: data) ?? nil
+                
+                if image != nil {
+                    completion(.success(image!))
+                } else {
+                    completion(.failure(UnknownApiError()))
                 }
             } else {
                 completion(.failure(UnknownApiError()))
