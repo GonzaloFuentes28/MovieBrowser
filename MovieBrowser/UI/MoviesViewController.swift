@@ -65,7 +65,8 @@ final class MoviesViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.cellId)
-        tableView.rowHeight = 150
+        tableView.rowHeight = 200
+        tableView.separatorStyle = .none
     }
 
     private func prepareActivityIndicator() {
