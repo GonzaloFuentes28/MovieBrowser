@@ -41,9 +41,6 @@ final class MoviesViewController: UIViewController {
         self.getMovies()
     }
     
-    
-    
-    
     private func prepareUI() {
         prepareRootView()
         prepareTableView()
@@ -94,9 +91,7 @@ final class MoviesViewController: UIViewController {
             case let .success(movies):
                 self.movies = movies
                 DispatchQueue.main.async {
-                    print("Preparing to reload data")
                     self.tableView.reloadData()
-                    print("Preparing to stop animating")
                     self.activityIndicator.stopAnimating()
                 }
             case let .failure(error):
@@ -107,6 +102,7 @@ final class MoviesViewController: UIViewController {
     }
 }
 
+// MARK: Table view data source
 extension MoviesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         movies.count
@@ -131,9 +127,9 @@ extension MoviesViewController: UITableViewDataSource {
         }
         
         if movies[indexPath.row].poster_path != nil{
-            print("Getting image for movie " + movies[indexPath.row].title! + " with URL " + "https://image.tmdb.org/t/p/w500" + movies[indexPath.row].poster_path!)
+            // print("Getting image for movie " + movies[indexPath.row].title! + " with URL " + "https://image.tmdb.org/t/p/w500" + movies[indexPath.row].poster_path!)
             
-            self.moviesProvider.getMoviePoster(poster_path: movies[indexPath.row].poster_path!, completion: { result in
+            self.moviesProvider.getMoviePoster(poster_path: movies[indexPath.row].poster_path!) { result in
                 switch result {
                 case let .success(image):
                     DispatchQueue.main.async {
@@ -143,7 +139,7 @@ extension MoviesViewController: UITableViewDataSource {
                     print(" Cannot get poster image, reason: \(error)")
                 }
                 
-            })
+            }
 
         }
         
@@ -165,6 +161,7 @@ extension MoviesViewController: UITableViewDataSource {
     
 }
 
+// MARK: Table view delegate
 extension MoviesViewController: UITableViewDelegate {
     
 }

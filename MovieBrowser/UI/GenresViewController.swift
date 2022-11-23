@@ -70,7 +70,11 @@ final class GenresViewController: UIViewController {
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Constants.cellId)
+        tableView.register(GenreCell.self, forCellReuseIdentifier: Constants.cellId)
+        
+        tableView.rowHeight = 75
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = UIColor(named: "tableBackground")
     }
 
     private func prepareActivityIndicator() {
@@ -120,11 +124,10 @@ extension GenresViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellId, for: indexPath)
-        var configuration = cell.defaultContentConfiguration()
-        configuration.text = genres[indexPath.row].name
-        cell.contentConfiguration = configuration
-        cell.setSelected(false, animated: false)
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellId, for: indexPath) as! GenreCell
+  
+        cell.genreLabel.text = genres[indexPath.row].name
+
         return cell
     }
 }
