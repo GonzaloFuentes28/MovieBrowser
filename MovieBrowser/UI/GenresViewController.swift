@@ -45,6 +45,14 @@ final class GenresViewController: UIViewController {
             self.prepareActivityIndicator()
         }
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if tableView.indexPathForSelectedRow != nil {
+            tableView.deselectRow(at: tableView.indexPathForSelectedRow!, animated: false)
+        }
+    }
 
     private func prepareRootView() {
         title = Constants.title
@@ -116,6 +124,7 @@ extension GenresViewController: UITableViewDataSource {
         var configuration = cell.defaultContentConfiguration()
         configuration.text = genres[indexPath.row].name
         cell.contentConfiguration = configuration
+        cell.setSelected(false, animated: false)
         return cell
     }
 }

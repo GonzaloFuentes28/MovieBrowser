@@ -10,6 +10,11 @@ import UIKit
 class MovieCell: UITableViewCell {
     var posterImageView = UIImageView(image: UIImage(named: "PosterPlaceholder"))
     var titleLabel = UILabel()
+    var yearLabel = UILabel()
+    var descriptionTextView = UITextView()
+    var durationContainer = UIView()
+    var clockImageView = UIImageView(image: UIImage(named: "Clock"))
+    var durationLabel = UILabel()
     
     var container = UIView()
     
@@ -18,51 +23,126 @@ class MovieCell: UITableViewCell {
         addSubview(container)
         container.addSubview(posterImageView)
         container.addSubview(titleLabel)
+        container.addSubview(yearLabel)
+        container.addSubview(durationContainer)
+        
+        durationContainer.addSubview(clockImageView)
+        durationContainer.addSubview(durationLabel)
+        
+        container.addSubview(descriptionTextView)
+
+        clipsToBounds = false
+        contentView.clipsToBounds = false
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
         
         setupContainer()
         setupImageView()
         setupTitleLabel()
+        setupYearLabel()
+        setupDurationContainer()
+        setupDescriptionTextView()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: Setup container
     func setupContainer(){
-        container.layer.cornerRadius = 10
+        container.layer.cornerRadius = 16
         container.layer.masksToBounds = false
-        container.layer.shadowRadius = 4
-        container.layer.shadowOpacity = 0.3
-        container.layer.shadowColor = UIColor.gray.cgColor
-        container.layer.shadowOffset = CGSize(width: 0, height: 3)
+        container.layer.shadowRadius = 24
+        container.layer.shadowOpacity = 0.1
+        container.layer.shadowColor = UIColor(named: "cardShadow")?.cgColor
+        container.layer.shadowOffset = CGSize(width: 0, height: 24)
         
-        container.backgroundColor = UIColor.white
+        container.backgroundColor = UIColor(named: "cardBackground")
         
         container.translatesAutoresizingMaskIntoConstraints = false
-        container.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 15).isActive = true
-        container.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -15).isActive = true
-        container.topAnchor.constraint(equalTo: topAnchor, constant: 15).isActive = true
-        container.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -15).isActive = true
+        container.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
+        container.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20).isActive = true
+        container.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
+        container.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
     }
     
+    // MARK: Setup poster
     func setupImageView() {
-        posterImageView.layer.cornerRadius = 10
+        posterImageView.layer.cornerRadius = 16
         posterImageView.clipsToBounds = true
         
         posterImageView.translatesAutoresizingMaskIntoConstraints = false
         posterImageView.centerYAnchor.constraint(equalTo: container.centerYAnchor).isActive = true
         posterImageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 12).isActive = true
-        posterImageView.heightAnchor.constraint(equalToConstant: 140).isActive = true
-        posterImageView.widthAnchor.constraint(equalTo: posterImageView.heightAnchor, multiplier: 9/16).isActive = true
+        posterImageView.heightAnchor.constraint(equalToConstant: 160).isActive = true
+        posterImageView.widthAnchor.constraint(equalTo: posterImageView.heightAnchor, multiplier: 118/168).isActive = true
     }
     
+    // MARK: Setup title
     func setupTitleLabel() {
         titleLabel.numberOfLines = 2
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        titleLabel.textColor = UIColor(named: "mainText")
         titleLabel.adjustsFontSizeToFitWidth = true
         
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 15).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -12).isActive = true
-        titleLabel.topAnchor.constraint(equalTo: container.topAnchor, constant: 12).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: posterImageView.topAnchor).isActive = true
+    }
+    
+    // MARK: Setup year label
+    func setupYearLabel() {
+        yearLabel.numberOfLines = 2
+        yearLabel.font = UIFont.boldSystemFont(ofSize: 11)
+        yearLabel.textColor = UIColor(named: "secondaryText")
+        yearLabel.adjustsFontSizeToFitWidth = true
+        
+        yearLabel.translatesAutoresizingMaskIntoConstraints = false
+        yearLabel.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 15).isActive = true
+        yearLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+        yearLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5).isActive = true
+    }
+    
+    // MARK: Setup description
+    func setupDescriptionTextView() {
+        descriptionTextView.font = UIFont.systemFont(ofSize: 11)
+        descriptionTextView.textColor = UIColor(named: "mainText")
+        descriptionTextView.textContainer.lineFragmentPadding = 0
+        descriptionTextView.textContainerInset = .zero
+        descriptionTextView.textContainer.lineBreakMode = .byTruncatingTail
+        descriptionTextView.isScrollEnabled = false
+        descriptionTextView.backgroundColor = .clear
+
+        
+        descriptionTextView.translatesAutoresizingMaskIntoConstraints = false
+        descriptionTextView.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 15).isActive = true
+        descriptionTextView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+        descriptionTextView.topAnchor.constraint(equalTo: yearLabel.bottomAnchor, constant: 5).isActive = true
+        descriptionTextView.bottomAnchor.constraint(equalTo: durationContainer.topAnchor, constant: -5).isActive = true
+    }
+    
+    // MARK: Setup length container
+    func setupDurationContainer() {
+        durationContainer.translatesAutoresizingMaskIntoConstraints = false
+        durationContainer.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        durationContainer.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 15).isActive = true
+        durationContainer.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+        durationContainer.bottomAnchor.constraint(equalTo: posterImageView.bottomAnchor).isActive = true
+        
+        clockImageView.translatesAutoresizingMaskIntoConstraints = false
+        clockImageView.bottomAnchor.constraint(equalTo: durationContainer.bottomAnchor).isActive = true
+        clockImageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        clockImageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        clockImageView.leadingAnchor.constraint(equalTo: durationContainer.leadingAnchor).isActive = true
+        
+        durationLabel.font = UIFont.systemFont(ofSize: 11)
+        durationLabel.textColor = UIColor(named: "secondaryText")
+        durationLabel.adjustsFontSizeToFitWidth = true
+        
+        durationLabel.translatesAutoresizingMaskIntoConstraints = false
+        durationLabel.leadingAnchor.constraint(equalTo: clockImageView.trailingAnchor, constant: 8).isActive = true
+        durationLabel.trailingAnchor.constraint(equalTo: durationContainer.trailingAnchor, constant: -15).isActive = true
+        durationLabel.centerYAnchor.constraint(equalTo: clockImageView.centerYAnchor).isActive = true
     }
 }

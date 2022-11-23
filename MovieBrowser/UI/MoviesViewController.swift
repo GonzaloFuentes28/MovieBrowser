@@ -35,9 +35,13 @@ final class MoviesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print("View did load")
+        
         self.prepareUI()
         self.getMovies()
     }
+    
+    
     
     
     private func prepareUI() {
@@ -65,8 +69,9 @@ final class MoviesViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(MovieCell.self, forCellReuseIdentifier: Constants.cellId)
-        tableView.rowHeight = 200
+        tableView.rowHeight = 215
         tableView.separatorStyle = .none
+        tableView.backgroundColor = UIColor(named: "tableBackground")
     }
 
     private func prepareActivityIndicator() {
@@ -110,6 +115,20 @@ extension MoviesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellId, for: indexPath) as! MovieCell
         cell.titleLabel.text = movies[indexPath.row].title
+        cell.yearLabel.text = movies[indexPath.row].getYear()
+        cell.posterImageView.image = UIImage(named: "PosterPlaceholder")
+        cell.descriptionTextView.text = movies[indexPath.row].overview
+        
+        self.moviesProvider.getMovieRuntime(movie_id: movies[indexPath.row].id!) { result in
+            switch result {
+            case let .success(runtime):
+                DispatchQueue.main.async {
+                    cell.durationLabel.text = String(runtime.convertToMovieLength())
+                }
+            case let .failure(error):
+                print(" Cannot get runtime, reason: \(error)")
+            }
+        }
         
         if movies[indexPath.row].poster_path != nil{
             print("Getting image for movie " + movies[indexPath.row].title! + " with URL " + "https://image.tmdb.org/t/p/w500" + movies[indexPath.row].poster_path!)
@@ -118,7 +137,7 @@ extension MoviesViewController: UITableViewDataSource {
                 switch result {
                 case let .success(image):
                     DispatchQueue.main.async {
-                        cell.posterImageView.image = image
+                        UIView.transition(with: cell.posterImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {cell.posterImageView.image = image})
                     }
                 case let .failure(error):
                     print(" Cannot get poster image, reason: \(error)")
@@ -127,8 +146,20 @@ extension MoviesViewController: UITableViewDataSource {
             })
 
         }
+        
+        cell.clipsToBounds = false
+        cell.contentView.clipsToBounds = false
                 
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.alpha = 0
+        cell.setSelected(false, animated: false)
+        
+        UIView.animate(withDuration: 0.5) {
+            cell.alpha = 1
+        }
     }
     
     

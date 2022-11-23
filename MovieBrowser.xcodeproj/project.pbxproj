@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F03308E292E77550096DE04 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F03308D292E77550096DE04 /* Extensions.swift */; };
 		8F2C3B5F292D430500316307 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2C3B5E292D430500316307 /* Movie.swift */; };
 		8F2C3B61292D43C600316307 /* MoviesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2C3B60292D43C600316307 /* MoviesProvider.swift */; };
 		8F2C3B63292D594200316307 /* MovieCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2C3B62292D594200316307 /* MovieCell.swift */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8F03308D292E77550096DE04 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		8F2C3B5E292D430500316307 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		8F2C3B60292D43C600316307 /* MoviesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesProvider.swift; sourceTree = "<group>"; };
 		8F2C3B62292D594200316307 /* MovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCell.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 			children = (
 				F9A76D482915356C006636D2 /* LaunchScreen.storyboard */,
 				F9A76D462915356C006636D2 /* Assets.xcassets */,
+				8F03308D292E77550096DE04 /* Extensions.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -269,6 +272,7 @@
 				F9CDCE9C29155CC8005D9847 /* ApiManager.swift in Sources */,
 				8F2C3B5F292D430500316307 /* Movie.swift in Sources */,
 				F9CDCE9829155C6E005D9847 /* GenresProvider.swift in Sources */,
+				8F03308E292E77550096DE04 /* Extensions.swift in Sources */,
 				F9CDCEA229155DCE005D9847 /* UnknownApiError.swift in Sources */,
 				F9A76D402915356B006636D2 /* SceneDelegate.swift in Sources */,
 				F9CDCEA029155DBD005D9847 /* ApiRequest.swift in Sources */,
@@ -427,7 +431,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = QVDGR7S7FA;
+				DEVELOPMENT_TEAM = 75286JYB3G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MovieBrowser/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -454,7 +458,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = QVDGR7S7FA;
+				DEVELOPMENT_TEAM = 75286JYB3G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = MovieBrowser/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

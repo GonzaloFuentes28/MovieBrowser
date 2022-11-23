@@ -12,6 +12,16 @@ struct Movie: Codable {
     let poster_path: String?
     let overview: String?
     let original_title: String?
-    let original_language: String?
     let title: String?
+    let runtime: Int?
+    let release_date: String?
+    
+    func getYear() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "YYYY-MM-DD"
+        
+        let calendar = Calendar.current
+        
+        return String(calendar.component(.year, from: formatter.date(from: release_date!)!))
+    }
 }
