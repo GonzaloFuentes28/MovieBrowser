@@ -42,8 +42,6 @@ final class MoviesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("View did load")
-        
         self.prepareUI()
         self.getMovies()
     }
@@ -207,7 +205,7 @@ extension MoviesViewController: UITableViewDataSource {
         cell.alpha = 0
         cell.setSelected(false, animated: false)
         
-        UIView.animate(withDuration: 0.5, delay: 0, options: .allowUserInteraction) {
+        UIView.animate(withDuration: 0.3, delay: 0, options: .allowUserInteraction) {
             cell.alpha = 1
         }
     }

@@ -84,7 +84,6 @@ final class GenresViewController: UIViewController {
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
-        activityIndicator.hidesWhenStopped = true
     }
 
     private func getGenres() {
@@ -98,7 +97,6 @@ final class GenresViewController: UIViewController {
                 self.genres = genres
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
-                    self.activityIndicator.stopAnimating()
                 }
             case let .failure(error):
                 print("Cannot get genres, reason: \(error)")
@@ -130,6 +128,12 @@ extension GenresViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        DispatchQueue.main.async {
+            if self.activityIndicator.isAnimating{
+                self.activityIndicator.stopAnimating()
+            }
+        }
+        
         cell.alpha = 0
         cell.setSelected(false, animated: false)
         
