@@ -97,9 +97,7 @@ final class GenresViewController: UIViewController {
             case let .success(genres):
                 self.genres = genres
                 DispatchQueue.main.async {
-                    print("Preparing to reload data")
                     self.tableView.reloadData()
-                    print("Preparing to stop animating")
                     self.activityIndicator.stopAnimating()
                 }
             case let .failure(error):

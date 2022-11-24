@@ -11,16 +11,56 @@ import UIKit
 final class MoviesProvider {
     private let apiManager: ApiManager
     private let imageCache: NSCache<NSString, UIImage> = NSCache<NSString, UIImage>()
+    
+    var movies = [Movie]()
+    var total_pages = 1
+    var error: Error? = nil
+    var dispatchGroup = DispatchGroup()
 
     init(apiManager: ApiManager) {
         self.apiManager = apiManager
     }
+    
+    func getMoviesOfGenreWithPages(genre_id: Int, pages: Int, completion: @escaping (Result<MoviesResponse, Error>) -> Void) {
+        
+        
+        for i in 1...pages {
+            if i > total_pages {
+                completion(.success(MoviesResponse(results: movies, total_pages: total_pages)))
+            }
+            
+            self.dispatchGroup.enter()
+            self.getMoviesOfGenre(genre_id: genre_id, page: i) { result in
+                switch result {
+                case let .success(tempMovies):
+                    self.movies += tempMovies.results
+                    self.total_pages = tempMovies.total_pages
+                case let .failure(tempError):
+                    print("Cannot get movies, reason: \(tempError)")
+                    self.error = tempError
+                }
+                
+                self.dispatchGroup.leave()
+            }
+        }
+        
+        dispatchGroup.notify(queue: .main, execute: {
+            if self.movies.count > 0 {
+                completion(.success(MoviesResponse(results: self.movies, total_pages: self.total_pages)))
+            } else {
+                if self.error != nil {
+                    completion(.failure(self.error!))
+                }
+            }
+        })
+    }
 
-    func getMoviesOfGenre(genre_id: Int, completion: @escaping (Result<[Movie], Error>) -> Void) {
-        apiManager.makeRequest(request: ApiRequest(endpoint: "/discover/movie", params: [URLQueryItem(name: "with_genres", value: String(genre_id)), URLQueryItem(name: "language", value: "en-US")])) { (response: Result<MoviesResponse, Error>) in
+    func getMoviesOfGenre(genre_id: Int, page: Int, completion: @escaping (Result<MoviesResponse, Error>) -> Void) {
+        apiManager.makeRequest(request: ApiRequest(endpoint: "/discover/movie", params: [URLQueryItem(name: "with_genres", value: String(genre_id)), URLQueryItem(name: "page", value: String(page))])) { (response: Result<MoviesResponse, Error>) in
+            
             switch response {
             case let .success(response):
-                completion(.success(response.results))
+                completion(.success(response))
             case let .failure(error) :
                 completion(.failure(error))
             }
@@ -57,8 +97,9 @@ final class MoviesProvider {
     }
 }
 
-private struct MoviesResponse: Codable {
+struct MoviesResponse: Codable {
     let results: [Movie]
+    let total_pages: Int
 }
 
 private struct Runtime: Codable {

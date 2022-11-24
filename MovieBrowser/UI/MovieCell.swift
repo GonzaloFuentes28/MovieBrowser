@@ -22,20 +22,30 @@ class MovieCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        // MARK: Add views
+        // Add container and add every other view to it
         addSubview(container)
+        
         container.addSubview(posterImageView)
         container.addSubview(titleLabel)
         container.addSubview(yearLabel)
+        
+        // Footer container
         container.addSubview(cellFooterContainer)
         
+        // Duration info
         cellFooterContainer.addSubview(clockImageView)
         cellFooterContainer.addSubview(durationLabel)
         
+        // Rating info
         cellFooterContainer.addSubview(starImageView)
         cellFooterContainer.addSubview(ratingLabel)
         
+        // Description text
         container.addSubview(descriptionTextView)
-
+        
+        // MARK: Prepare cell and setup UI
         clipsToBounds = false
         contentView.clipsToBounds = false
         backgroundColor = .clear
@@ -139,6 +149,7 @@ class MovieCell: UITableViewCell {
         setupRating()
     }
     
+    // MARK: Setup movie duration
     func setupDuration(){
         clockImageView.translatesAutoresizingMaskIntoConstraints = false
         clockImageView.bottomAnchor.constraint(equalTo: cellFooterContainer.bottomAnchor).isActive = true
@@ -155,6 +166,7 @@ class MovieCell: UITableViewCell {
         durationLabel.centerYAnchor.constraint(equalTo: clockImageView.centerYAnchor).isActive = true
     }
     
+    // MARK: Setup movie rating
     func setupRating(){
         ratingLabel.font = UIFont.systemFont(ofSize: 11)
         ratingLabel.textColor = UIColor(named: "secondaryText")
