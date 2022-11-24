@@ -55,6 +55,8 @@ final class MoviesViewController: UIViewController {
 
     private func prepareRootView() {
         title = genre.name
+        
+        self.navigationController?.navigationBar.tintColor = UIColor(named: "mainText")
     }
     
     private func prepareTableView() {
@@ -240,6 +242,12 @@ extension MoviesViewController: UISearchBarDelegate {
                     DispatchQueue.main.async {
                         self.tableView.reloadData()
                         self.tableView.scrollToTop(animated: true)
+                    }
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5)) {
+                        if self.activityIndicator.isAnimating{
+                            self.activityIndicator.stopAnimating()
+                        }
                     }
                 case let .failure(error):
                     print("Cannot get movies, reason: \(error)")
