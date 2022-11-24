@@ -17,12 +17,15 @@ final class MoviesViewController: UIViewController {
     
     private let tableView = UITableView()
     private let activityIndicator = UIActivityIndicatorView()
-
+    private let searchController = UISearchController()
+    private let searchBar: UISearchBar
+    
     private var movies = [Movie]()
 
     init(genre: Genre, moviesProvider: MoviesProvider) {
         self.moviesProvider = moviesProvider
         self.genre = genre
+        self.searchBar = searchController.searchBar
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -44,6 +47,7 @@ final class MoviesViewController: UIViewController {
     private func prepareUI() {
         prepareRootView()
         prepareTableView()
+        prepareSearchBar()
         DispatchQueue.main.async {
             self.prepareActivityIndicator()
         }
@@ -80,7 +84,21 @@ final class MoviesViewController: UIViewController {
         ])
         activityIndicator.hidesWhenStopped = true
     }
-
+    
+    private func prepareSearchBar(){
+        view.addSubview(searchBar)
+        
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        
+        searchBar.delegate = self
+        searchBar.sizeToFit()
+        searchBar.placeholder = "Start typing to search " + genre.name.lowercased() + " movies"
+        searchBar.isTranslucent = false
+        searchBar.returnKeyType = .search
+        searchBar.enablesReturnKeyAutomatically = true
+    }
+    
     private func getMovies() {
         DispatchQueue.main.async {
             self.activityIndicator.startAnimating()
@@ -114,6 +132,7 @@ extension MoviesViewController: UITableViewDataSource {
         cell.yearLabel.text = movies[indexPath.row].getYear()
         cell.posterImageView.image = UIImage(named: "PosterPlaceholder")
         cell.descriptionTextView.text = movies[indexPath.row].overview
+        cell.ratingLabel.text = String(movies[indexPath.row].vote_average!)
         
         self.moviesProvider.getMovieRuntime(movie_id: movies[indexPath.row].id!) { result in
             switch result {
@@ -127,13 +146,11 @@ extension MoviesViewController: UITableViewDataSource {
         }
         
         if movies[indexPath.row].poster_path != nil{
-            // print("Getting image for movie " + movies[indexPath.row].title! + " with URL " + "https://image.tmdb.org/t/p/w500" + movies[indexPath.row].poster_path!)
-            
             self.moviesProvider.getMoviePoster(poster_path: movies[indexPath.row].poster_path!) { result in
                 switch result {
                 case let .success(image):
                     DispatchQueue.main.async {
-                        UIView.transition(with: cell.posterImageView, duration: 0.5, options: .transitionCrossDissolve, animations: {cell.posterImageView.image = image})
+                        UIView.transition(with: cell.posterImageView, duration: 0.5, options: [.transitionCrossDissolve], animations: {cell.posterImageView.image = image})
                     }
                 case let .failure(error):
                     print(" Cannot get poster image, reason: \(error)")
@@ -153,15 +170,30 @@ extension MoviesViewController: UITableViewDataSource {
         cell.alpha = 0
         cell.setSelected(false, animated: false)
         
-        UIView.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .allowUserInteraction) {
             cell.alpha = 1
         }
     }
-    
-    
 }
 
 // MARK: Table view delegate
 extension MoviesViewController: UITableViewDelegate {
+    
+}
+
+// MARK: Search bar delegate
+extension MoviesViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.movies = self.movies.filter({ movie in
+            return movie.title!.contains(searchText)
+        })
+        
+        tableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.getMovies()
+    }
+    
     
 }

@@ -12,9 +12,11 @@ class MovieCell: UITableViewCell {
     var titleLabel = UILabel()
     var yearLabel = UILabel()
     var descriptionTextView = UITextView()
-    var durationContainer = UIView()
+    var cellFooterContainer = UIView()
     var clockImageView = UIImageView(image: UIImage(named: "Clock"))
+    var starImageView = UIImageView(image: UIImage(systemName: "star.fill"))
     var durationLabel = UILabel()
+    var ratingLabel = UILabel()
     
     var container = UIView()
     
@@ -24,10 +26,13 @@ class MovieCell: UITableViewCell {
         container.addSubview(posterImageView)
         container.addSubview(titleLabel)
         container.addSubview(yearLabel)
-        container.addSubview(durationContainer)
+        container.addSubview(cellFooterContainer)
         
-        durationContainer.addSubview(clockImageView)
-        durationContainer.addSubview(durationLabel)
+        cellFooterContainer.addSubview(clockImageView)
+        cellFooterContainer.addSubview(durationLabel)
+        
+        cellFooterContainer.addSubview(starImageView)
+        cellFooterContainer.addSubview(ratingLabel)
         
         container.addSubview(descriptionTextView)
 
@@ -40,7 +45,7 @@ class MovieCell: UITableViewCell {
         setupImageView()
         setupTitleLabel()
         setupYearLabel()
-        setupDurationContainer()
+        setupCellFooterContainer()
         setupDescriptionTextView()
     }
 
@@ -119,22 +124,27 @@ class MovieCell: UITableViewCell {
         descriptionTextView.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 15).isActive = true
         descriptionTextView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
         descriptionTextView.topAnchor.constraint(equalTo: yearLabel.bottomAnchor, constant: 5).isActive = true
-        descriptionTextView.bottomAnchor.constraint(equalTo: durationContainer.topAnchor, constant: -5).isActive = true
+        descriptionTextView.bottomAnchor.constraint(equalTo: cellFooterContainer.topAnchor, constant: -5).isActive = true
     }
     
     // MARK: Setup length container
-    func setupDurationContainer() {
-        durationContainer.translatesAutoresizingMaskIntoConstraints = false
-        durationContainer.heightAnchor.constraint(equalToConstant: 16).isActive = true
-        durationContainer.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 15).isActive = true
-        durationContainer.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
-        durationContainer.bottomAnchor.constraint(equalTo: posterImageView.bottomAnchor).isActive = true
+    func setupCellFooterContainer() {
+        cellFooterContainer.translatesAutoresizingMaskIntoConstraints = false
+        cellFooterContainer.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        cellFooterContainer.leadingAnchor.constraint(equalTo: posterImageView.trailingAnchor, constant: 15).isActive = true
+        cellFooterContainer.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -15).isActive = true
+        cellFooterContainer.bottomAnchor.constraint(equalTo: posterImageView.bottomAnchor).isActive = true
         
+        setupDuration()
+        setupRating()
+    }
+    
+    func setupDuration(){
         clockImageView.translatesAutoresizingMaskIntoConstraints = false
-        clockImageView.bottomAnchor.constraint(equalTo: durationContainer.bottomAnchor).isActive = true
+        clockImageView.bottomAnchor.constraint(equalTo: cellFooterContainer.bottomAnchor).isActive = true
         clockImageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
         clockImageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
-        clockImageView.leadingAnchor.constraint(equalTo: durationContainer.leadingAnchor).isActive = true
+        clockImageView.leadingAnchor.constraint(equalTo: cellFooterContainer.leadingAnchor).isActive = true
         
         durationLabel.font = UIFont.systemFont(ofSize: 11)
         durationLabel.textColor = UIColor(named: "secondaryText")
@@ -142,7 +152,23 @@ class MovieCell: UITableViewCell {
         
         durationLabel.translatesAutoresizingMaskIntoConstraints = false
         durationLabel.leadingAnchor.constraint(equalTo: clockImageView.trailingAnchor, constant: 8).isActive = true
-        durationLabel.trailingAnchor.constraint(equalTo: durationContainer.trailingAnchor, constant: -15).isActive = true
         durationLabel.centerYAnchor.constraint(equalTo: clockImageView.centerYAnchor).isActive = true
+    }
+    
+    func setupRating(){
+        ratingLabel.font = UIFont.systemFont(ofSize: 11)
+        ratingLabel.textColor = UIColor(named: "secondaryText")
+        ratingLabel.adjustsFontSizeToFitWidth = true
+        
+        ratingLabel.translatesAutoresizingMaskIntoConstraints = false
+        ratingLabel.trailingAnchor.constraint(equalTo: cellFooterContainer.trailingAnchor, constant: -15).isActive = true
+        ratingLabel.centerYAnchor.constraint(equalTo: starImageView.centerYAnchor).isActive = true
+        
+        starImageView.translatesAutoresizingMaskIntoConstraints = false
+        starImageView.bottomAnchor.constraint(equalTo: cellFooterContainer.bottomAnchor).isActive = true
+        starImageView.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        starImageView.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        starImageView.trailingAnchor.constraint(equalTo: ratingLabel.leadingAnchor, constant: -8).isActive = true
+        starImageView.tintColor = UIColor(named: "secondaryText")
     }
 }

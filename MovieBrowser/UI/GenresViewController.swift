@@ -130,4 +130,13 @@ extension GenresViewController: UITableViewDataSource {
 
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.alpha = 0
+        cell.setSelected(false, animated: false)
+        
+        UIView.animate(withDuration: 0.2, delay: 0, options: .allowUserInteraction) {
+            cell.alpha = 1
+        }
+    }
 }
