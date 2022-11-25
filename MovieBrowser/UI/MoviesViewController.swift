@@ -59,6 +59,7 @@ final class MoviesViewController: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor(named: "mainText")
     }
     
+    // MARK: Setup table
     private func prepareTableView() {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -75,8 +76,10 @@ final class MoviesViewController: UIViewController {
         tableView.rowHeight = 215
         tableView.separatorStyle = .none
         tableView.backgroundColor = UIColor(named: "tableBackground")
+        tableView.allowsSelection = false
     }
-
+    
+    // MARK: Setup activity indicator
     private func prepareActivityIndicator() {
         tableView.addSubview(activityIndicator)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -86,6 +89,7 @@ final class MoviesViewController: UIViewController {
         ])
     }
     
+    // MARK: Setup searchbar
     private func prepareSearchBar(){
         view.addSubview(searchBar)
         
@@ -134,7 +138,7 @@ extension MoviesViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // MARK: Load next page if user reaching the end
         DispatchQueue.main.async {
-            if self.searchController.isActive == false && self.searchBar.text == "" {
+            if self.searchController.isActive == false && self.searchBar.text == "" && self.pagesLoaded < self.total_pages {
                 if (indexPath.row == self.movies.count-1) {
                     self.moviesProvider.getMoviesOfGenre(genre_id: self.genre.id, page: self.pagesLoaded+1) { result in
                         switch result {
